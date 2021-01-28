@@ -6,7 +6,6 @@ Al hacer click en "calcular", mostrar en un elemento pre-existente la mayor edad
 Punto bonus: Crear un botón para "empezar de nuevo" que empiece el proceso nuevamente, borrando los inputs ya creados (investigar cómo en MDN).
 */
 
-
 const $botonSiguiente = document.querySelector("#siguiente");
 const $botonEmpezarDeNuevo = document.querySelector("#resetear");
 const $botonCalcular = document.querySelector("#calcular");
@@ -23,11 +22,13 @@ function crearIntegrantes(cantidadIntegrantes) {
     const textoLabel = document.createTextNode(
       `Edad del integrante #${i + 1}: `
     );
+    $EdadIntegrante.className = "col-auto mt-2 text-success";
+
     const $edad = document.createElement("input");
 
     $edad.type = "number";
     $edad.id = "edad-integrante";
-    $edad.className = "edades-integrantes";
+    $edad.className = "edades-integrantes form-control";
 
     $EdadIntegrante.appendChild(textoLabel);
     $listaIntegrantes.appendChild($EdadIntegrante);
@@ -40,6 +41,10 @@ function borrarIntegrantes() {
     $listaIntegrantes.removeChild($listaIntegrantes.firstChild);
   }
   document.querySelector("#cantidad-integrantes-familia").value = "";
+
+  document.querySelector(`#mayor-integrante`).textContent = "";
+  document.querySelector(`#menor-integrante`).textContent = "";
+  document.querySelector(`#promedio-edades-familia`).textContent = "";
 }
 
 function habilitarBotonSiguiente() {
@@ -49,10 +54,6 @@ function habilitarBotonSiguiente() {
 function mostrarResultados(edadesIntegrantes) {
   $resultados.className = "";
 
-  const $mayorIntegrante = document.querySelector("#mayor-integrante");
-  const $menorIntegrante = document.querySelector("#menor-integrante");
-  const $promedioEdades = document.querySelector("#promedio-edades-familia");
-
   mostrarEdades("mayor-integrante", calcularMayorEdad(edadesIntegrantes));
   mostrarEdades("menor-integrante", calcularMenorEdad(edadesIntegrantes));
   mostrarEdades(
@@ -61,10 +62,8 @@ function mostrarResultados(edadesIntegrantes) {
   );
 }
 
-function mostrarEdades(mayorIntegrante, calculo) {
-  document.querySelector(
-    `#${mayorIntegrante}`
-  ).textContent += `${calculo} años.`;
+function mostrarEdades(integrante, calculo) {
+  document.querySelector(`#${integrante}`).textContent += `${calculo} años.`;
 }
 
 function ocultarResultados() {
@@ -76,6 +75,9 @@ $botonSiguiente.onclick = function () {
   const cantidadIntegrantes = Number(
     document.querySelector("#cantidad-integrantes-familia").value
   );
+
+  validarCantidadIntegrantes(cantidadIntegrantes);
+
   crearIntegrantes(cantidadIntegrantes);
   mostrarCantidadIntegrantes();
   return false;
@@ -94,3 +96,11 @@ $botonCalcular.onclick = function () {
   calcular(edadesIntegrantes);
   mostrarResultados(edadesIntegrantes);
 };
+
+function validarCantidadIntegrantes(cantidadIntegrantes) {
+  if (cantidadIntegrantes < 1) {
+    return "Ingrese un número mayor a cero";
+  }
+
+  return "";
+}
